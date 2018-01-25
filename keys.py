@@ -1,6 +1,8 @@
 from bitcoin import *
 import ecdsa
 from ecdsa import SigningKey, SECP256k1 # cryptography lib for bitcoin addresses
+import hashlib
+import base58
 import os
 
 def keys_address():
@@ -11,5 +13,15 @@ def keys_address():
 
     public_key = bytes.fromhex("04") + verifying_key.to_string()
     print("public key: ", binascii.hexlify(public_key).decode())
+    sha256_1 = hashlib.sha256(public_key)
+    ripemd160 = hashlib.new('ripemd160')
+    ripemd160.update(sha256_1.digest())
+    hashed_public_key = bytes.fromhex("00") + ripemd160.digest()
+    print("hashed public key: ", binascii.hexlify(hashed_public_key).decode())
+    check_sum_full = hashlib.sha256(hashlib.sha256(hashed_public_key).digest()).digest()
+    check_sum = check_sum_full[:4]
+    bin_addr = hashed_public_key + check_sum
+    final_bit_coin_address = base58.b58encode(bin_addr)
+    print("Bit coin address is : ", final_bit_coin_address)
 
 keys_address()
