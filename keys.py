@@ -21,7 +21,7 @@ def keys_address():
     check_sum_full = hashlib.sha256(hashlib.sha256(hashed_public_key).digest()).digest()
     check_sum = check_sum_full[:4]
     bin_addr = hashed_public_key + check_sum
-    final_bit_coin_address = base58.b58encode(bin_addr)
+    final_bit_coin_address = base58.b58encode(bin_addr) #remove 0 and o for human readability
     print("Bit coin address is : ", final_bit_coin_address)
 
 keys_address()
